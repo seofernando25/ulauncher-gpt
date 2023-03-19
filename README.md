@@ -2,6 +2,8 @@
 
 This extension enables you to use ChatGPT custom system prompts to create your own custom assistant
 
+![Screen shot](images/screenshot.png)
+
 ## Install
 
 - Open **Ulauncher**
