@@ -5,7 +5,7 @@
     "developer_name": "Fernando Nogueira",
     "icon": "images/icon.png",
     "options": {
-        "query_debounce": 0.5
+        "query_debounce": 2
     },
     "preferences": [
         {
