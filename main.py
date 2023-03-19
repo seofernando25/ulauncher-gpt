@@ -146,7 +146,8 @@ class KeywordQueryEventListener(EventListener):
                                     on_enter=CopyToClipboardAction(str(err)))
             ])
 
-        logger.info("Results: %s", str(items))
+        item_string = ' | '.join([item.name for item in items])
+        logger.info("Results: %s", item_string)
         return RenderResultListAction(items)
 
 
