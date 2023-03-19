@@ -1,0 +1,60 @@
+{
+    "required_api_version": "^2.0.0",
+    "name": "ULauncher GPT",
+    "description": "Talk with GPT-3.5",
+    "developer_name": "Fernando Nogueira",
+    "icon": "images/icon.png",
+    "options": {
+        "query_debounce": 0.05
+    },
+    "preferences": [
+        {
+            "id": "gpt_kw",
+            "type": "keyword",
+            "name": "GPT",
+            "default_value": "gpt"
+        },
+         {
+            "id": "api_key",
+            "type": "input",
+            "name": "OpenAI API Key",
+            "default_value": ""
+        },
+        {
+            "id": "system_prompt",
+            "type": "input",
+            "name": "System Prompt",
+            "default_value": "Convert natural language instructions into Linux commands. You have been programmed to understand a wide set of commands Linux related commands. You should only answer with the best and most relevant linux command, no descriptions or context, just return the command, do not use 'new lines'"
+        },
+        {
+            "id": "frequency_penalty",
+            "type": "input",
+            "name": "Frequency Penalty",
+            "default_value": "0.0"
+        },
+        {
+            "id": "max_tokens",
+            "type": "input",
+            "name": "Max Tokens",
+            "default_value": "64"
+        },
+        {
+            "id": "presence_penalty",
+            "type": "input",
+            "name": "Presence Penalty",
+            "default_value": "0.0"
+        },
+        {
+            "id": "temperature",
+            "type": "input",
+            "name": "Temperature",
+            "default_value": "0.7"
+        },
+        {
+            "id": "top_p",
+            "type": "input",
+            "name": "Top P",
+            "default_value": "1.0"
+        }
+    ]
+}
