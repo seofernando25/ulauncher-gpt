@@ -36,7 +36,7 @@
             "id": "max_tokens",
             "type": "input",
             "name": "Max Tokens",
-            "default_value": "64"
+            "default_value": "42"
         },
         {
             "id": "presence_penalty",
