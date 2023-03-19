@@ -7,6 +7,7 @@ from ulauncher.api.shared.action.RenderResultListAction import RenderResultListA
 from ulauncher.api.shared.action.CopyToClipboardAction import CopyToClipboardAction
 from ulauncher.api.shared.action.DoNothingAction import DoNothingAction
 import requests
+import json
 
 logger = logging.getLogger(__name__)
 EXTENSION_ICON = 'images/icon.png'
@@ -88,6 +89,7 @@ class KeywordQueryEventListener(EventListener):
             "presence_penalty": presence_penalty,
             "model": "gpt-3.5-turbo",
         }
+        body = json.dumps(body)
 
         logger.info('Request body: %s', str(body))
         logger.info('Request headers: %s', str(headers))
