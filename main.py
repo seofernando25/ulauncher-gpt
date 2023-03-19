@@ -79,7 +79,7 @@ class KeywordQueryEventListener(EventListener):
                 },
                 {
                     "role": "user",
-                    "content": "hello!"
+                    "content": search_term
                 }
             ],
             "temperature": temperature,
