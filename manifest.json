@@ -1,7 +1,7 @@
 {
     "required_api_version": "^2.0.0",
     "name": "ChatGPT",
-    "description": "Create a domain specific extension using GPT-3.5",
+    "description": "Create a domain specific assistant using GPT-3.5",
     "developer_name": "SeoFernando",
     "icon": "images/icon.png",
     "options": {
