@@ -1,8 +1,8 @@
 {
     "required_api_version": "^2.0.0",
-    "name": "ULauncher GPT",
-    "description": "Talk with GPT-3.5",
-    "developer_name": "Fernando Nogueira",
+    "name": "ChatGPT",
+    "description": "Create a domain specific extension using GPT-3.5",
+    "developer_name": "SeoFernando",
     "icon": "images/icon.png",
     "options": {
         "query_debounce": 2
