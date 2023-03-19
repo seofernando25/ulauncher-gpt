@@ -145,6 +145,8 @@ class KeywordQueryEventListener(EventListener):
                                     str(response),
                                     on_enter=CopyToClipboardAction(str(err)))
             ])
+
+        logger.info("Results: %s", str(items))
         return RenderResultListAction(items)
 
 
