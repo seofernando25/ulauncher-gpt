@@ -24,7 +24,7 @@
         {
             "id": "line_wrap",
             "type": "input",
-            "name": "Line Lenght",
+            "name": "Line Length",
             "description": "The maximum number of characters per line.",
             "default_value": "64"
         },
