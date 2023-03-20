@@ -14,12 +14,19 @@
             "name": "GPT",
             "default_value": "gpt"
         },
-         {
+        {
             "id": "api_key",
             "type": "input",
             "name": "OpenAI API Key",
             "description": "You can get one at https://platform.openai.com/account/api-keys",
             "default_value": ""
+        },
+        {
+            "id": "line_wrap",
+            "type": "input",
+            "name": "Line Lenght",
+            "description": "The maximum number of characters per line.",
+            "default_value": "64"
         },
         {
             "id": "system_prompt",

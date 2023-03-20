@@ -13,6 +13,20 @@ logger = logging.getLogger(__name__)
 EXTENSION_ICON = 'images/icon.png'
 
 
+def wrap_text(text, max_w):
+    words = text.split()
+    lines = []
+    current_line = ''
+    for word in words:
+        if len(current_line + word) <= max_w:
+            current_line += ' ' + word
+        else:
+            lines.append(current_line.strip())
+            current_line = word
+    lines.append(current_line.strip())
+    return '\n'.join(lines)
+
+
 class GPTExtension(Extension):
     """
     Ulauncher extension to generate text using GPT-3
@@ -43,6 +57,7 @@ class KeywordQueryEventListener(EventListener):
             temperature = float(extension.preferences['temperature'])
             top_p = float(extension.preferences['top_p'])
             system_prompt = extension.preferences['system_prompt']
+            line_wrap = int(extension.preferences['line_wrap'])
         # pylint: disable=broad-except
         except Exception as err:
             logger.error('Failed to parse preferences: %s', str(err))
@@ -132,10 +147,11 @@ class KeywordQueryEventListener(EventListener):
         items = []
         try:
             for choice in choices:
-                name = choice['message']['content']
+                message = choice['message']['content']
+                message = wrap_text(message, line_wrap)
 
-                items.append(ExtensionResultItem(icon=EXTENSION_ICON, name=name,
-                                                 on_enter=CopyToClipboardAction(name)))
+                items.append(ExtensionResultItem(icon=EXTENSION_ICON, name="Assistant", description=message,
+                                                 on_enter=CopyToClipboardAction(message)))
         # pylint: disable=broad-except
         except Exception as err:
             logger.error('Failed to parse response: %s', str(response))
