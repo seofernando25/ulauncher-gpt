@@ -1,4 +1,6 @@
-# ULauncher Chat GPT Extension
+# [ULauncher](https://ulauncher.io/) Chat GPT Extension
+
+> Disclaimer: Not affiliated with OpenAI
 
 This extension enables you to use ChatGPT custom system prompts to create your own custom assistant
 
