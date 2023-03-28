@@ -137,10 +137,16 @@ class KeywordQueryEventListener(EventListener):
         # pylint: disable=broad-except
         except Exception as err:
             logger.error('Failed to parse response: %s', str(response))
+            errMsg = "Unknown error, please check logs for more info"
+            try:
+                errMsg = response.error.message
+            except Exception:
+                pass
+
             return RenderResultListAction([
                 ExtensionResultItem(icon=EXTENSION_ICON,
                                     name='Failed to parse response: ' +
-                                    str(response),
+                                    errMsg,
                                     on_enter=CopyToClipboardAction(str(err)))
             ])
 
