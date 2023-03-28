@@ -144,7 +144,7 @@ class KeywordQueryEventListener(EventListener):
                                     on_enter=CopyToClipboardAction(str(err)))
             ])
 
-        items = []
+        items: list[ExtensionResultItem] = []
         try:
             for choice in choices:
                 message = choice['message']['content']
@@ -162,8 +162,13 @@ class KeywordQueryEventListener(EventListener):
                                     on_enter=CopyToClipboardAction(str(err)))
             ])
 
-        item_string = ' | '.join([item.name for item in items])
-        logger.info("Results: %s", item_string)
+        try:
+            item_string = ' | '.join([item.name for item in items])
+            logger.info("Results: %s", item_string)
+        except Exception as err:
+            logger.error('Failed to log results: %s', str(err))
+            logger.error('Results: %s', str(items))
+
         return RenderResultListAction(items)
 
 
