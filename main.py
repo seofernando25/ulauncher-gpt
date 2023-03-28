@@ -163,7 +163,7 @@ class KeywordQueryEventListener(EventListener):
             ])
 
         try:
-            item_string = ' | '.join([item.name for item in items])
+            item_string = ' | '.join([item.description for item in items])
             logger.info("Results: %s", item_string)
         except Exception as err:
             logger.error('Failed to log results: %s', str(err))
