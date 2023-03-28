@@ -139,7 +139,7 @@ class KeywordQueryEventListener(EventListener):
             logger.error('Failed to parse response: %s', str(response))
             errMsg = "Unknown error, please check logs for more info"
             try:
-                errMsg = response.error.message
+                errMsg = response['error']['message']
             except Exception:
                 pass
 
