@@ -147,7 +147,7 @@ class KeywordQueryEventListener(EventListener):
                 ExtensionResultItem(icon=EXTENSION_ICON,
                                     name='Failed to parse response: ' +
                                     errMsg,
-                                    on_enter=CopyToClipboardAction(str(err)))
+                                    on_enter=CopyToClipboardAction(str(errMsg)))
             ])
 
         items: list[ExtensionResultItem] = []
