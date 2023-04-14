@@ -22,6 +22,13 @@
             "default_value": ""
         },
         {
+            "id": "model",
+            "type": "input",
+            "name": "OpenAI chat completion model",
+            "description": "For model names see https://platform.openai.com/docs/guides/chat",
+            "default_value": "gpt-3.5-turbo"
+        },
+        {
             "id": "line_wrap",
             "type": "input",
             "name": "Line Length",

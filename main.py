@@ -58,6 +58,7 @@ class KeywordQueryEventListener(EventListener):
             top_p = float(extension.preferences['top_p'])
             system_prompt = extension.preferences['system_prompt']
             line_wrap = int(extension.preferences['line_wrap'])
+            model = extension.preferences['model']
         # pylint: disable=broad-except
         except Exception as err:
             logger.error('Failed to parse preferences: %s', str(err))
@@ -102,7 +103,7 @@ class KeywordQueryEventListener(EventListener):
             "top_p": top_p,
             "frequency_penalty": frequency_penalty,
             "presence_penalty": presence_penalty,
-            "model": "gpt-3.5-turbo",
+            "model": model,
         }
         body = json.dumps(body)
 
