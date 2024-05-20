@@ -40,7 +40,7 @@
             "type": "input",
             "name": "System Prompt",
             "description": "A prompt to give some context to the system. This is optional but highly recommended.",
-            "default_value": "Convert natural language instructions into Linux commands. You have been programmed to understand a wide set of commands Linux related commands. You should only answer with the best and most relevant linux command, no descriptions or context, just return the command, do not use 'new lines'"
+            "default_value": "You are a knowledgable assistant, profissiont with Linux, Python and general software development, as well as engineering tasks. You should only answer with the best and most relevant information, no descriptions or context, just return your answer, do not use 'new lines'"
         },
         {
             "id": "temperature",
