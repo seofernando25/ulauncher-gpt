@@ -29,6 +29,13 @@
             "default_value": "gpt-3.5-turbo"
         },
         {
+            "id": "endpoint_url",
+            "type": "input",
+            "name": "OpenAI API endpoint URL",
+            "description": "The OpenAI API endpoint URL (default: https://api.openai.com/v1/chat/completions)",
+            "default_value": "https://api.openai.com/v1/chat/completions"
+        },
+        {
             "id": "line_wrap",
             "type": "input",
             "name": "Line Length",

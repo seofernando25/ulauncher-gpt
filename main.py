@@ -44,8 +44,6 @@ class KeywordQueryEventListener(EventListener):
     """
 
     def on_event(self, event, extension):
-        endpoint = "https://api.openai.com/v1/chat/completions"
-
         logger.info('Processing user preferences')
         # Get user preferences
         try:
@@ -59,6 +57,7 @@ class KeywordQueryEventListener(EventListener):
             system_prompt = extension.preferences['system_prompt']
             line_wrap = int(extension.preferences['line_wrap'])
             model = extension.preferences['model']
+            endpoint = extension.preferences['endpoint_url']
         # pylint: disable=broad-except
         except Exception as err:
             logger.error('Failed to parse preferences: %s', str(err))
