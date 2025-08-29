@@ -36,7 +36,7 @@ class GPTExtension(Extension):
 
     def __init__(self):
         super(GPTExtension, self).__init__()
-        logger.info('GPT-3 extension started')
+        logger.info('OpenAI extension started')
         self.session = requests.Session() # Create a session for connection pooling (faster)
         self.subscribe(KeywordQueryEvent, KeywordQueryEventListener())
 
@@ -47,6 +47,7 @@ class KeywordQueryEventListener(EventListener):
     """
 
     def on_event(self, event, extension):
+
         start_time = time.time()
         logger.debug('Processing user preferences')
         # Get user preferences
@@ -144,6 +145,7 @@ class KeywordQueryEventListener(EventListener):
         request_time = time.time() - start_time
         start_time = time.time()
         logger.debug('Request succeeded')
+        
         logger.debug('Response: %s', response.json())
 
         # See https://platform.openai.com/docs/api-reference/chat/create for response structure
