@@ -42,25 +42,43 @@
             "default_value": ""
         },
         {
-            "id": "endpoint_url",
-            "type": "input",
-            "name": "OpenAI API endpoint URL",
-            "description": "The OpenAI API endpoint URL (default: https://api.openai.com/v1/chat/completions)",
-            "default_value": "https://api.openai.com/v1/chat/completions"
-        },
-        {
-            "id": "line_wrap",
-            "type": "input",
-            "name": "Line Length",
-            "description": "The maximum number of characters per line.",
-            "default_value": "64"
-        },
-        {
             "id": "system_prompt",
             "type": "input",
             "name": "System Prompt",
             "description": "A prompt to give some context to the system. This is optional but highly recommended.",
             "default_value": "You're a helpful assistant who answers briefly."
+        },
+        {
+            "id": "reasoning_effort",
+            "type": "select",
+            "name": "Reasoning Effort",
+            "description": "How much effort to put into reasoning about the task.",
+            "default_value": "minimal",
+            "options": [
+                {"value": "minimal", "text": "Minimal reasoning"},
+                {"value": "low", "text": "Low reasoning"},
+                {"value": "medium", "text": "Moderate reasoning"},
+                {"value": "high", "text": "Extensive reasoning"}
+            ]
+        },
+        {
+            "id": "verbosity",
+            "type": "select",
+            "name": "Verbosity",
+            "description": "How verbose the output should be.",
+            "default_value": "low",
+            "options": [
+                {"value": "low", "text": "Low verbosity"},
+                {"value": "medium", "text": "Moderate verbosity"},
+                {"value": "high", "text": "Extensive verbosity"}
+            ]
+        },
+        {
+            "id": "endpoint_url",
+            "type": "input",
+            "name": "OpenAI API endpoint URL",
+            "description": "The OpenAI API endpoint URL (default: https://api.openai.com/v1/chat/completions)",
+            "default_value": "https://api.openai.com/v1/chat/completions"
         },
         {
             "id": "temperature",
@@ -74,7 +92,7 @@
             "type": "input",
             "name": "Max Completion Tokens",
             "description": "Maximum number of tokens to generate (1 to x)",
-            "default_value": "200"
+            "default_value": "500"
         },
         {
             "id": "top_p",
@@ -96,6 +114,13 @@
             "name": "Presence Penalty",
             "description": "Prevents topic repetition (-2 to 2)",
             "default_value": "0.0"
+        },
+        {
+            "id": "line_wrap",
+            "type": "input",
+            "name": "Line Length",
+            "description": "The maximum number of characters per line.",
+            "default_value": "50"
         }
     ]
 }

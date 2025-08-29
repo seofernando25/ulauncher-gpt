@@ -1,10 +1,13 @@
 import logging
+import time
 from ulauncher.api.client.Extension import Extension
 from ulauncher.api.client.EventListener import EventListener
 from ulauncher.api.shared.event import KeywordQueryEvent
 from ulauncher.api.shared.item.ExtensionResultItem import ExtensionResultItem
+from ulauncher.api.shared.item.ExtensionSmallResultItem import ExtensionSmallResultItem
 from ulauncher.api.shared.action.RenderResultListAction import RenderResultListAction
 from ulauncher.api.shared.action.CopyToClipboardAction import CopyToClipboardAction
+from ulauncher.api.shared.action.OpenUrlAction import OpenUrlAction
 from ulauncher.api.shared.action.DoNothingAction import DoNothingAction
 import requests
 import json
@@ -12,13 +15,12 @@ import json
 logger = logging.getLogger(__name__)
 EXTENSION_ICON = 'images/icon.png'
 
-
-def wrap_text(text, max_w):
+def wrap_text(text, max_width=50):
     words = text.split()
     lines = []
     current_line = ''
     for word in words:
-        if len(current_line + word) <= max_w:
+        if len(current_line + word) <= max_width:
             current_line += ' ' + word
         else:
             lines.append(current_line.strip())
@@ -29,12 +31,13 @@ def wrap_text(text, max_w):
 
 class GPTExtension(Extension):
     """
-    Ulauncher extension to generate text using GPT-3
+    Ulauncher extension to generate text using OpenAI
     """
 
     def __init__(self):
         super(GPTExtension, self).__init__()
         logger.info('GPT-3 extension started')
+        self.session = requests.Session() # Create a session for connection pooling (faster)
         self.subscribe(KeywordQueryEvent, KeywordQueryEventListener())
 
 
@@ -44,7 +47,8 @@ class KeywordQueryEventListener(EventListener):
     """
 
     def on_event(self, event, extension):
-        logger.info('Processing user preferences')
+        start_time = time.time()
+        logger.debug('Processing user preferences')
         # Get user preferences
         try:
             api_key = extension.preferences['api_key']
@@ -57,6 +61,8 @@ class KeywordQueryEventListener(EventListener):
             system_prompt = extension.preferences['system_prompt']
             line_wrap = int(extension.preferences['line_wrap'])
             model = extension.preferences['model']
+            verbosity = extension.preferences['verbosity']
+            reasoning_effort = extension.preferences['reasoning_effort']
             if model == 'custom':
                 model = extension.preferences['custom_model']
             endpoint = extension.preferences['endpoint_url']
@@ -65,17 +71,17 @@ class KeywordQueryEventListener(EventListener):
             logger.error('Failed to parse preferences: %s', str(err))
             return RenderResultListAction([
                 ExtensionResultItem(icon=EXTENSION_ICON,
-                                    name='Failed to parse preferences: ' +
-                                    str(err),
+                                    name='An error occured',
+                                    description=wrap_text('Failed to parse preferences: ' + str(err)),
                                     on_enter=CopyToClipboardAction(str(err)))
             ])
 
         # Get search term
         search_term = event.get_argument()
-        logger.info('The search term is: %s', search_term)
+        logger.debug('Search query: %s', search_term)
         # Display blank prompt if user hasn't typed anything
         if not search_term:
-            logger.info('Displaying blank prompt')
+            logger.debug('Displaying blank prompt')
             return RenderResultListAction([
                 ExtensionResultItem(icon=EXTENSION_ICON,
                                     name='Type in a prompt...',
@@ -91,7 +97,7 @@ class KeywordQueryEventListener(EventListener):
         body = {
             "messages": [
                 {
-                    "role": "system",
+                    "role": "developer",
                     "content": system_prompt
                 },
                 {
@@ -104,38 +110,38 @@ class KeywordQueryEventListener(EventListener):
             "top_p": top_p,
             "frequency_penalty": frequency_penalty,
             "presence_penalty": presence_penalty,
-            "model": model,
+            "reasoning_effort": reasoning_effort,
+            "verbosity": verbosity,
+            "model": model
         }
         body = json.dumps(body)
 
-        logger.info('Request body: %s', str(body))
-        logger.info('Request headers: %s', str(headers))
-
+        logger.debug('Request headers: %s', str(headers))
+        logger.debug('Request body: %s', str(body))
+        preference_time = time.time() - start_time
+        start_time = time.time()
         # Send POST request
         try:
-            logger.info('Sending request')
-            response = requests.post(
-                endpoint, headers=headers, data=body, timeout=10)
+            logger.debug('Sending request')
+            response = extension.session.post(endpoint, headers=headers, data=body, timeout=10)
         # pylint: disable=broad-except
         except Exception as err:
             logger.error('Request failed: %s', str(err))
             return RenderResultListAction([
                 ExtensionResultItem(icon=EXTENSION_ICON,
-                                    name='Request failed: ' + str(err),
+                                    name='An error occured',
+                                    description=wrap_text('Request failed: ' + str(err)),
                                     on_enter=CopyToClipboardAction(str(err)))
             ])
+        request_time = time.time() - start_time
+        start_time = time.time()
+        logger.debug('Request succeeded')
+        logger.debug('Response: %s', response.json())
 
-        logger.info('Request succeeded')
-        logger.info('Response: %s', str(response))
-
-        # Get response
-        # Choice schema
-        #  { message: Message, finish_reason: string, index: number }
-        # Message schema
-        #  { role: string, content: string }
+        # See https://platform.openai.com/docs/api-reference/chat/create for response structure
         try:
             response = response.json()
-            choices = response['choices']
+            answer = response['choices'][0]
         # pylint: disable=broad-except
         except Exception as err:
             logger.error('Failed to parse response: %s', str(response))
@@ -147,37 +153,61 @@ class KeywordQueryEventListener(EventListener):
 
             return RenderResultListAction([
                 ExtensionResultItem(icon=EXTENSION_ICON,
-                                    name='Failed to parse response: ' +
-                                    errMsg,
+                                    name='An error occured',
+                                    description=wrap_text('Failed to parse response: ' + str(err)),
                                     on_enter=CopyToClipboardAction(str(errMsg)))
             ])
 
-        items: list[ExtensionResultItem] = []
+        response_items: list[ExtensionResultItem] = []
         try:
-            for choice in choices:
-                message = choice['message']['content']
-                message = wrap_text(message, line_wrap)
+            message = answer['message']['content']
+            message = wrap_text(message, line_wrap)
 
-                items.append(ExtensionResultItem(icon=EXTENSION_ICON, name="Assistant", description=message,
-                                                 on_enter=CopyToClipboardAction(message)))
+            response_items.append(
+                ExtensionSmallResultItem(
+                    icon=EXTENSION_ICON,
+                    name=message,
+                    on_enter=CopyToClipboardAction(message)
+                )
+            )
+            response_items.append(
+                ExtensionSmallResultItem(
+                    icon=EXTENSION_ICON,
+                    name="Open ChatGPT Web",
+                    on_enter=OpenUrlAction("https://chatgpt.com/?prompt=" + search_term)
+                )
+            )
+            response_items.append(
+                ExtensionSmallResultItem(
+                    icon="images/google-logo.png",
+                    name="Search on Google",
+                    on_enter=OpenUrlAction("https://www.google.com/search?q=" + search_term)
+                )
+            )
         # pylint: disable=broad-except
         except Exception as err:
             logger.error('Failed to parse response: %s', str(response))
             return RenderResultListAction([
                 ExtensionResultItem(icon=EXTENSION_ICON,
-                                    name='Failed to parse response: ' +
-                                    str(response),
+                                    name='An error occured',
+                                    description=wrap_text('Failed to parse response: ' + str(err)),
                                     on_enter=CopyToClipboardAction(str(err)))
             ])
 
         try:
-            item_string = ' | '.join([item.description for item in items])
-            logger.info("Results: %s", item_string)
+            item_string = ' | '.join([item._description for item in response_items])
+            logger.debug("Answer: %s", item_string)
         except Exception as err:
             logger.error('Failed to log results: %s', str(err))
-            logger.error('Results: %s', str(items))
+            logger.error('Results: %s', str(response_items))
 
-        return RenderResultListAction(items)
+        response_list_time = time.time() - start_time
+
+        logger.debug(f"Preference Loading Time: {preference_time:.2f}s")
+        logger.debug(f"Request Execution Time: {request_time:.2f}s")
+        logger.debug(f"Response List Creation Time: {response_list_time:.2f}s")
+
+        return RenderResultListAction(response_items)
 
 
 if __name__ == '__main__':
