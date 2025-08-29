@@ -76,6 +76,12 @@ class KeywordQueryEventListener(EventListener):
                                     on_enter=CopyToClipboardAction(str(err)))
             ])
 
+        if any(x in model for x in ["o1", "o3", "4o", "4.1", "gpt-3"]): # respect older models
+            if reasoning_effort == "minimal": # option was not available for these models
+                reasoning_effort = "low"
+            if verbosity != "medium": # nothing else than medium is supported for these models
+                verbosity = "medium"
+
         # Get search term
         search_term = event.get_argument()
         logger.debug('Search query: %s', search_term)
@@ -114,6 +120,8 @@ class KeywordQueryEventListener(EventListener):
             "verbosity": verbosity,
             "model": model
         }
+        if any(x in model for x in ["4o", "4.1", "gpt-3"]): # respect older models
+            body.pop("reasoning_effort", None) # option was not available for these models
         body = json.dumps(body)
 
         logger.debug('Request headers: %s', str(headers))
