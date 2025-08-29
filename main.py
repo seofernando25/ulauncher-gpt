@@ -48,7 +48,7 @@ class KeywordQueryEventListener(EventListener):
         # Get user preferences
         try:
             api_key = extension.preferences['api_key']
-            max_tokens = int(extension.preferences['max_tokens'])
+            max_tokens = int(extension.preferences['max_completion_tokens'])
             frequency_penalty = float(
                 extension.preferences['frequency_penalty'])
             presence_penalty = float(extension.preferences['presence_penalty'])
@@ -57,6 +57,8 @@ class KeywordQueryEventListener(EventListener):
             system_prompt = extension.preferences['system_prompt']
             line_wrap = int(extension.preferences['line_wrap'])
             model = extension.preferences['model']
+            if model == 'custom':
+                model = extension.preferences['custom_model']
             endpoint = extension.preferences['endpoint_url']
         # pylint: disable=broad-except
         except Exception as err:
@@ -98,7 +100,7 @@ class KeywordQueryEventListener(EventListener):
                 }
             ],
             "temperature": temperature,
-            "max_tokens": max_tokens,
+            "max_completion_tokens": max_tokens,
             "top_p": top_p,
             "frequency_penalty": frequency_penalty,
             "presence_penalty": presence_penalty,

@@ -1,7 +1,7 @@
 {
     "required_api_version": "^2.0.0",
     "name": "ChatGPT",
-    "description": "Create a domain specific assistant using GPT-3.5",
+    "description": "Create a domain specific assistant using OpenAI API",
     "developer_name": "SeoFernando",
     "icon": "images/icon.png",
     "options": {
@@ -23,10 +23,23 @@
         },
         {
             "id": "model",
-            "type": "input",
+            "type": "select",
             "name": "OpenAI chat completion model",
             "description": "For model names see https://platform.openai.com/docs/guides/chat",
-            "default_value": "gpt-3.5-turbo"
+            "default_value": "gpt-5",
+            "options": [
+                {"value": "gpt-5", "text": "GPT-5 (Latest, most capable, expensive)"},
+                {"value": "gpt-5-mini", "text": "GPT-5 Mini (Latest, cost-efficient)"},
+                {"value": "gpt-5-nano", "text": "GPT-5 Nano (Latest, fastest, most cost-efficient)"},
+                {"value": "custom", "text": "Custom Model"}
+            ]
+        },
+        {
+            "id": "custom_model",
+            "type": "input",
+            "name": "Custom Model Name",
+            "description": "Only used when 'Custom Model' is selected above",
+            "default_value": ""
         },
         {
             "id": "endpoint_url",
@@ -47,41 +60,41 @@
             "type": "input",
             "name": "System Prompt",
             "description": "A prompt to give some context to the system. This is optional but highly recommended.",
-            "default_value": "Convert natural language instructions into Linux commands. You have been programmed to understand a wide set of commands Linux related commands. You should only answer with the best and most relevant linux command, no descriptions or context, just return the command, do not use 'new lines'"
+            "default_value": "You're a helpful assistant who answers briefly."
         },
         {
             "id": "temperature",
             "type": "input",
             "name": "Temperature",
-            "description": "Lower = Predictable text | Higher = Surprising/Random text (0-1)",
-            "default_value": "0.7"
+            "description": "Lower = Predictable text | Higher = Surprising/Random text (0 to 2)",
+            "default_value": "1"
         },
         {
-            "id": "max_tokens",
+            "id": "max_completion_tokens",
             "type": "input",
-            "name": "Max Tokens",
-            "description": "Maximum number of tokens to generate (1-2048)",
-            "default_value": "42"
+            "name": "Max Completion Tokens",
+            "description": "Maximum number of tokens to generate (1 to x)",
+            "default_value": "200"
         },
         {
             "id": "top_p",
             "type": "input",
             "name": "Top P",
-            "description": "Controls diversity via nucleus sampling (0-1)",
+            "description": "Controls diversity via nucleus sampling (0 to 1)",
             "default_value": "1.0"
         },
         {
             "id": "frequency_penalty",
             "type": "input",
             "name": "Frequency Penalty",
-            "description": "Prevents words from being repeated too often (0-2)",
+            "description": "Prevents words from being repeated too often (-2 to 2)",
             "default_value": "0.0"
         },
         {
             "id": "presence_penalty",
             "type": "input",
             "name": "Presence Penalty",
-            "description": "Prevents topic repetition (0-2)",
+            "description": "Prevents topic repetition (-2 to 2)",
             "default_value": "0.0"
         }
     ]
